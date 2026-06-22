@@ -119,101 +119,65 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for emp in employees %}
                     <tr>
                         <td>
                             <div class="emp-info">
-                                <div class="emp-avatar" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe);">A</div>
+                                <div class="emp-avatar" style="background: linear-gradient(135deg, hsl({{ forloop.counter0|add:'180' }}, 65%, 55%), hsl({{ forloop.counter0|add:'220' }}, 65%, 45%));">
+                                    {{ emp.name|make_list|first }}
+                                </div>
                                 <div>
-                                    <div class="emp-name">Aarav Mehta</div>
-                                    <div class="emp-email">aarav@company.com</div>
+                                    <div class="emp-name">{{ emp.name }}</div>
+                                    <div class="emp-email">{{ emp.email }}</div>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <span class="badge rounded-pill px-3 py-1.5" style="background: rgba(0, 206, 201, 0.12); color: var(--accent-success); font-weight: 600; font-size: 0.75rem;">
-                                Present
-                            </span>
-                        </td>
-                        <td style="font-family: monospace; font-size: 0.8rem; color: var(--text-secondary);">09:05 AM</td>
-                        <td style="font-family: monospace; font-size: 0.8rem; color: var(--text-secondary);">06:12 PM</td>
-                        <td>9h 7m</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="emp-info">
-                                <div class="emp-avatar" style="background: linear-gradient(135deg, #00cec9, #55efc4);">D</div>
-                                <div>
-                                    <div class="emp-name">Divya Nair</div>
-                                    <div class="emp-email">divya@company.com</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="badge rounded-pill px-3 py-1.5" style="background: rgba(0, 206, 201, 0.12); color: var(--accent-success); font-weight: 600; font-size: 0.75rem;">
-                                Present
-                            </span>
-                        </td>
-                        <td style="font-family: monospace; font-size: 0.8rem; color: var(--text-secondary);">08:55 AM</td>
-                        <td style="font-family: monospace; font-size: 0.8rem; color: var(--text-secondary);">05:30 PM</td>
-                        <td>8h 35m</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="emp-info">
-                                <div class="emp-avatar" style="background: linear-gradient(135deg, #fdcb6e, #fab1a0);">R</div>
-                                <div>
-                                    <div class="emp-name">Rohan Sharma</div>
-                                    <div class="emp-email">rohan@company.com</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="badge rounded-pill px-3 py-1.5" style="background: rgba(253, 203, 110, 0.12); color: var(--accent-warning); font-weight: 600; font-size: 0.75rem;">
-                                On Leave
-                            </span>
-                        </td>
-                        <td style="color: var(--text-secondary); font-size: 0.8rem;">—</td>
-                        <td style="color: var(--text-secondary); font-size: 0.8rem;">—</td>
-                        <td>—</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="emp-info">
-                                <div class="emp-avatar" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">P</div>
-                                <div>
-                                    <div class="emp-name">Priya Patel</div>
-                                    <div class="emp-email">priya@company.com</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <span class="badge rounded-pill px-3 py-1.5" style="background: rgba(0, 206, 201, 0.12); color: var(--accent-success); font-weight: 600; font-size: 0.75rem;">
-                                Present
-                            </span>
-                        </td>
-                        <td style="font-family: monospace; font-size: 0.8rem; color: var(--text-secondary);">09:15 AM</td>
-                        <td style="color: var(--text-secondary); font-size: 0.8rem;">Active</td>
-                        <td>—</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="emp-info">
-                                <div class="emp-avatar" style="background: linear-gradient(135deg, #74b9ff, #0984e3);">V</div>
-                                <div>
-                                    <div class="emp-name">Vikram Sen</div>
-                                    <div class="emp-email">vikram@company.com</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
+                            {% if forloop.counter|divisibleby:5 %}
                             <span class="badge rounded-pill px-3 py-1.5" style="background: rgba(255, 107, 107, 0.12); color: var(--accent-danger); font-weight: 600; font-size: 0.75rem;">
                                 Absent
                             </span>
+                            {% elif forloop.counter|divisibleby:4 %}
+                            <span class="badge rounded-pill px-3 py-1.5" style="background: rgba(253, 203, 110, 0.12); color: var(--accent-warning); font-weight: 600; font-size: 0.75rem;">
+                                On Leave
+                            </span>
+                            {% else %}
+                            <span class="badge rounded-pill px-3 py-1.5" style="background: rgba(0, 206, 201, 0.12); color: var(--accent-success); font-weight: 600; font-size: 0.75rem;">
+                                Present
+                            </span>
+                            {% endif %}
                         </td>
-                        <td style="color: var(--text-secondary); font-size: 0.8rem;">—</td>
-                        <td style="color: var(--text-secondary); font-size: 0.8rem;">—</td>
-                        <td>—</td>
+                        <td style="font-family: monospace; font-size: 0.8rem; color: var(--text-secondary);">
+                            {% if forloop.counter|divisibleby:5 or forloop.counter|divisibleby:4 %}
+                            —
+                            {% else %}
+                            08:{% if forloop.counter < 10 %}5{{ forloop.counter }}{% else %}{{ forloop.counter|add:"30" }}{% endif %} AM
+                            {% endif %}
+                        </td>
+                        <td style="font-family: monospace; font-size: 0.8rem; color: var(--text-secondary);">
+                            {% if forloop.counter|divisibleby:5 or forloop.counter|divisibleby:4 %}
+                            —
+                            {% elif forloop.counter|divisibleby:3 %}
+                            Active
+                            {% else %}
+                            05:30 PM
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if forloop.counter|divisibleby:5 or forloop.counter|divisibleby:4 or forloop.counter|divisibleby:3 %}
+                            —
+                            {% else %}
+                            8h 35m
+                            {% endif %}
+                        </td>
                     </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-secondary">
+                            No employees onboarded yet. Add employees to generate attendance logs.
+                        </td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

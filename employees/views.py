@@ -145,8 +145,12 @@ def payroll(request):
     return render(request, 'payroll.html', context)
 
 def attendance(request):
-    total_employees = Employee.objects.count()
-    return render(request, 'attendance.html', {'total_employees': total_employees})
+    employees = Employee.objects.all()
+    total_employees = employees.count()
+    return render(request, 'attendance.html', {
+        'employees': employees,
+        'total_employees': total_employees
+    })
 
 def preferences(request):
     return render(request, 'preferences.html')
