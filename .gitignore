@@ -1,0 +1,10 @@
+# Django standard gitignore
+*.pyc
+__pycache__/
+db.sqlite3
+staticfiles/
+.env
+venv/
+.agents/
+.gemini/
+*.log

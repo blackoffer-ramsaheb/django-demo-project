@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-hav^@i7r5-6!0((dl5g^h-rj@u)k7ax)7#imsy6+u$y!1wqel="
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-hav^@i7r5-6!0((dl5g^h-rj@u)k7ax)7#imsy6+u$y!1wqel=")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "True").lower() in ("true", "1", "yes")
 
 ALLOWED_HOSTS = ["*"]
+
+# CSRF Trusted Origins for Railway deployment and production environment variables
+CSRF_TRUSTED_ORIGINS = []
+csrf_trusted_origins_env = os.getenv("CSRF_TRUSTED_ORIGINS")
+if csrf_trusted_origins_env:
+    CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_trusted_origins_env.split(",") if origin.strip()]
+else:
+    # Auto-trust the Railway public domains if they are present in environment variables
+    railway_domain = os.getenv("RAILWAY_PUBLIC_DOMAIN")
+    if railway_domain:
+        CSRF_TRUSTED_ORIGINS.append(f"https://{railway_domain}")
+    
+    # Fallback to default public domain
+    CSRF_TRUSTED_ORIGINS.append("https://django-demo-project-production.up.railway.app")
 
 
 # Application definition
@@ -42,6 +57,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Whitenoise to serve static files
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -116,6 +132,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Configure Whitenoise storage for production static files serving (Django 4.2+ compatible)
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
