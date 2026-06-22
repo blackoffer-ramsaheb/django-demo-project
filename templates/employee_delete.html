@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Employee — HR Nexus{% endblock %}
+
+{% block nav_employees %}active{% endblock %}
+
+{% block page_title %}Delete Employee{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'employee_list' %}" class="btn btn-ghost d-inline-flex align-items-center gap-1">
+    <i class="bi bi-arrow-left"></i> Back to List
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-xl-5">
+
+        <div class="card-custom animate-in animate-delay-1" style="border-color: rgba(255, 107, 107, 0.25);">
+
+            <!-- Danger Header -->
+            <div class="card-header" style="border-bottom-color: rgba(255, 107, 107, 0.15);">
+                <div class="d-flex align-items-center gap-3">
+                    <div style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: #fff;
+                        background: linear-gradient(135deg, var(--accent-danger), #ee5a24);">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0 fw-bold" style="font-size: 1.05rem; color: var(--accent-danger);">
+                            Confirm Deletion
+                        </h5>
+                        <small style="color: var(--text-secondary); font-size: 0.78rem;">
+                            This action cannot be undone
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+
+                <!-- Employee Preview Card -->
+                <div class="animate-in animate-delay-2" style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="emp-avatar" style="width: 50px; height: 50px; font-size: 1.1rem; border-radius: 14px; background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
+                            {{ employee.name|make_list|first }}
+                        </div>
+                        <div>
+                            <div class="emp-name" style="font-size: 1.05rem;">{{ employee.name }}</div>
+                            <div class="emp-email">{{ employee.email }}</div>
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <div style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">
+                                <i class="bi bi-building me-1"></i> Department
+                            </div>
+                            <div style="font-size: 0.875rem; font-weight: 600;">{{ employee.department }}</div>
+                        </div>
+                        <div class="col-6">
+                            <div style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">
+                                <i class="bi bi-currency-rupee me-1"></i> Salary
+                            </div>
+                            <div class="salary-text" style="font-size: 0.875rem;">₹{{ employee.salary|floatformat:0 }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Warning Message -->
+                <div class="animate-in animate-delay-3" style="background: rgba(255, 107, 107, 0.06); border: 1px solid rgba(255, 107, 107, 0.15); border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem;">
+                    <div class="d-flex align-items-start gap-2">
+                        <i class="bi bi-info-circle-fill" style="color: var(--accent-danger); margin-top: 2px;"></i>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0; line-height: 1.6;">
+                            You are about to permanently delete <strong style="color: var(--text-primary);">{{ employee.name }}</strong> from the system. All associated records will be removed and this action <strong style="color: var(--accent-danger);">cannot be reversed</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex gap-3 animate-in animate-delay-4">
+                    <form method="POST" class="flex-grow-1">
+                        {% csrf_token %}
+                        <button type="submit" class="btn w-100 d-flex align-items-center justify-content-center gap-2 py-2" style="
+                            background: linear-gradient(135deg, var(--accent-danger), #ee5a24);
+                            border: none;
+                            color: #fff;
+                            font-weight: 600;
+                            border-radius: 10px;
+                            font-size: 0.85rem;
+                            transition: all 0.3s ease;
+                            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+                        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 25px rgba(255,107,107,0.45)'"
+                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255,107,107,0.3)'">
+                            <i class="bi bi-trash3-fill"></i> Yes, Delete Employee
+                        </button>
+                    </form>
+                    <a href="{% url 'employee_list' %}" class="btn btn-ghost d-flex align-items-center justify-content-center gap-1 px-4 py-2">
+                        Cancel
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

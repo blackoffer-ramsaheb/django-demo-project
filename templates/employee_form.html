@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if form.instance.pk %}Edit Employee{% else %}Add Employee{% endif %} — HR Nexus{% endblock %}
+
+{% block nav_add %}{% if not form.instance.pk %}active{% endif %}{% endblock %}
+
+{% block page_title %}{% if form.instance.pk %}Edit Employee{% else %}New Employee{% endif %}{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'employee_list' %}" class="btn btn-ghost d-inline-flex align-items-center gap-1">
+    <i class="bi bi-arrow-left"></i> Back to List
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7 col-xl-6">
+
+        <!-- Form Card -->
+        <div class="card-custom animate-in animate-delay-1">
+            <div class="card-header">
+                <div class="d-flex align-items-center gap-3">
+                    <div style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #fff;
+                        background: linear-gradient(135deg, {% if form.instance.pk %}var(--accent-warning), #e17055{% else %}var(--accent-primary), var(--accent-secondary){% endif %});">
+                        <i class="bi {% if form.instance.pk %}bi-pencil-square{% else %}bi-person-plus-fill{% endif %}"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0 fw-bold" style="font-size: 1.05rem;">
+                            {% if form.instance.pk %}
+                                Edit Employee Details
+                            {% else %}
+                                Add a New Employee
+                            {% endif %}
+                        </h5>
+                        <small style="color: var(--text-secondary); font-size: 0.78rem;">
+                            {% if form.instance.pk %}
+                                Update the information below
+                            {% else %}
+                                Fill in the details to onboard a new team member
+                            {% endif %}
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <form method="POST" novalidate>
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                    <div class="mb-4 animate-in" style="animation-delay: {{ forloop.counter }}00ms; opacity: 0;">
+                        <label for="{{ field.id_for_label }}" class="form-label-custom">
+                            {% if field.name == 'name' %}
+                                <i class="bi bi-person me-1"></i>
+                            {% elif field.name == 'email' %}
+                                <i class="bi bi-envelope me-1"></i>
+                            {% elif field.name == 'department' %}
+                                <i class="bi bi-building me-1"></i>
+                            {% elif field.name == 'salary' %}
+                                <i class="bi bi-currency-rupee me-1"></i>
+                            {% endif %}
+                            {{ field.label }}
+                        </label>
+
+                        <input
+                            type="{% if field.name == 'email' %}email{% elif field.name == 'salary' %}number{% else %}text{% endif %}"
+                            name="{{ field.html_name }}"
+                            id="{{ field.id_for_label }}"
+                            value="{{ field.value|default_if_none:'' }}"
+                            class="form-control form-control-custom {% if field.errors %}is-invalid{% endif %}"
+                            placeholder="{% if field.name == 'name' %}e.g. Ravi Kumar{% elif field.name == 'email' %}e.g. ravi@company.com{% elif field.name == 'department' %}e.g. Engineering{% elif field.name == 'salary' %}e.g. 75000{% endif %}"
+                            {% if field.name == 'salary' %}step="0.01" min="0"{% endif %}
+                        >
+
+                        {% if field.errors %}
+                        <div class="invalid-feedback d-block" style="font-size: 0.78rem; margin-top: 0.35rem;">
+                            {% for error in field.errors %}
+                                <i class="bi bi-exclamation-circle me-1"></i>{{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex gap-3 mt-4 pt-3 animate-in" style="animation-delay: 500ms; opacity: 0; border-top: 1px solid var(--border-color);">
+                        <button type="submit" class="btn btn-accent flex-grow-1 d-flex align-items-center justify-content-center gap-2 py-2">
+                            {% if form.instance.pk %}
+                                <i class="bi bi-check-lg"></i> Update Employee
+                            {% else %}
+                                <i class="bi bi-plus-lg"></i> Add Employee
+                            {% endif %}
+                        </button>
+                        <a href="{% url 'employee_list' %}" class="btn btn-ghost d-flex align-items-center justify-content-center gap-1 px-4 py-2">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tips Card -->
+        <div class="card-custom mt-4 animate-in" style="animation-delay: 0.6s; opacity: 0;">
+            <div class="card-body py-3 px-4">
+                <div class="d-flex align-items-start gap-3">
+                    <div style="color: var(--accent-warning); font-size: 1.25rem; margin-top: 2px;">
+                        <i class="bi bi-lightbulb-fill"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold" style="font-size: 0.85rem; margin-bottom: 0.25rem;">Quick Tip</div>
+                        <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 0;">
+                            Make sure the email address is unique for each employee. The department name helps organize team members for reporting and analytics.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

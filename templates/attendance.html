@@ -1,0 +1,323 @@
+{% extends 'base.html' %}
+
+{% block title %}Attendance — HR Nexus{% endblock %}
+
+{% block nav_attendance %}active{% endblock %}
+
+{% block page_title %}Attendance Dashboard{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'employee_list' %}" class="btn btn-ghost d-inline-flex align-items-center gap-1">
+    <i class="bi bi-arrow-left"></i> Back to List
+</a>
+{% endblock %}
+
+{% block content %}
+<!-- Info Banner explaining simulated data -->
+<div class="card-custom mb-4 animate-in animate-delay-1" style="border-left: 4px solid var(--accent-warning);">
+    <div class="card-body py-3 px-4">
+        <div class="d-flex align-items-start gap-3">
+            <div style="color: var(--accent-warning); font-size: 1.3rem; margin-top: 2px;">
+                <i class="bi bi-info-circle-fill"></i>
+            </div>
+            <div>
+                <div class="fw-semibold" style="font-size: 0.85rem; margin-bottom: 0.25rem;">Demo View Active</div>
+                <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 0; line-height: 1.5;">
+                    This is a simulation dashboard. Real-time attendance tracking requires integrating biometric devices or setting up an <code>Attendance</code> database model linked to check-in/check-out events.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stat Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-4 col-lg-4 animate-in animate-delay-1">
+        <div class="stat-card">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="stat-icon" style="background: rgba(0, 206, 201, 0.12); color: var(--accent-success);">
+                    <i class="bi bi-calendar-check"></i>
+                </div>
+            </div>
+            <div class="stat-value" id="statPresent">0</div>
+            <div class="stat-label">Present Today</div>
+        </div>
+    </div>
+    <div class="col-4 col-lg-4 animate-in animate-delay-2">
+        <div class="stat-card">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="stat-icon" style="background: rgba(253, 203, 110, 0.12); color: var(--accent-warning);">
+                    <i class="bi bi-calendar-minus"></i>
+                </div>
+            </div>
+            <div class="stat-value" id="statLeave">0</div>
+            <div class="stat-label">On Leave</div>
+        </div>
+    </div>
+    <div class="col-4 col-lg-4 animate-in animate-delay-3">
+        <div class="stat-card">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="stat-icon" style="background: rgba(255, 107, 107, 0.12); color: var(--accent-danger);">
+                    <i class="bi bi-calendar-x"></i>
+                </div>
+            </div>
+            <div class="stat-value" id="statAbsent">0</div>
+            <div class="stat-label">Absent</div>
+        </div>
+    </div>
+</div>
+
+<!-- Weekly Trend & Today Breakdown -->
+<div class="row g-4 mb-4">
+    <!-- Line Chart -->
+    <div class="col-lg-8 animate-in animate-delay-2">
+        <div class="card-custom h-100">
+            <div class="card-header">
+                <h5 class="mb-0 fw-bold" style="font-size: 0.95rem;">Weekly Attendance Trend</h5>
+                <small style="color: var(--text-secondary); font-size: 0.75rem;">Daily participation rate over the current week</small>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center" style="min-height: 280px;">
+                <div style="position: relative; height:240px; width:100%">
+                    <canvas id="weeklyAttendanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Doughnut Chart -->
+    <div class="col-lg-4 animate-in animate-delay-3">
+        <div class="card-custom h-100">
+            <div class="card-header">
+                <h5 class="mb-0 fw-bold" style="font-size: 0.95rem;">Status Split</h5>
+                <small style="color: var(--text-secondary); font-size: 0.75rem;">Breakdown of today's attendance status</small>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center" style="min-height: 280px;">
+                <div style="position: relative; height:220px; width:100%">
+                    <canvas id="todayAttendanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Simulated Logs Table -->
+<div class="card-custom animate-in animate-delay-4">
+    <div class="card-header">
+        <h5 class="mb-0 fw-bold" style="font-size: 0.95rem;">Today's Sign-ins (Simulated)</h5>
+        <small style="color: var(--text-secondary); font-size: 0.75rem;">Real-time clock-in clock-out activity log</small>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-custom">
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Status</th>
+                        <th>Clock In</th>
+                        <th>Clock Out</th>
+                        <th>Active Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="emp-info">
+                                <div class="emp-avatar" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe);">A</div>
+                                <div>
+                                    <div class="emp-name">Aarav Mehta</div>
+                                    <div class="emp-email">aarav@company.com</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge rounded-pill px-3 py-1.5" style="background: rgba(0, 206, 201, 0.12); color: var(--accent-success); font-weight: 600; font-size: 0.75rem;">
+                                Present
+                            </span>
+                        </td>
+                        <td style="font-family: monospace; font-size: 0.8rem; color: var(--text-secondary);">09:05 AM</td>
+                        <td style="font-family: monospace; font-size: 0.8rem; color: var(--text-secondary);">06:12 PM</td>
+                        <td>9h 7m</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="emp-info">
+                                <div class="emp-avatar" style="background: linear-gradient(135deg, #00cec9, #55efc4);">D</div>
+                                <div>
+                                    <div class="emp-name">Divya Nair</div>
+                                    <div class="emp-email">divya@company.com</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge rounded-pill px-3 py-1.5" style="background: rgba(0, 206, 201, 0.12); color: var(--accent-success); font-weight: 600; font-size: 0.75rem;">
+                                Present
+                            </span>
+                        </td>
+                        <td style="font-family: monospace; font-size: 0.8rem; color: var(--text-secondary);">08:55 AM</td>
+                        <td style="font-family: monospace; font-size: 0.8rem; color: var(--text-secondary);">05:30 PM</td>
+                        <td>8h 35m</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="emp-info">
+                                <div class="emp-avatar" style="background: linear-gradient(135deg, #fdcb6e, #fab1a0);">R</div>
+                                <div>
+                                    <div class="emp-name">Rohan Sharma</div>
+                                    <div class="emp-email">rohan@company.com</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge rounded-pill px-3 py-1.5" style="background: rgba(253, 203, 110, 0.12); color: var(--accent-warning); font-weight: 600; font-size: 0.75rem;">
+                                On Leave
+                            </span>
+                        </td>
+                        <td style="color: var(--text-secondary); font-size: 0.8rem;">—</td>
+                        <td style="color: var(--text-secondary); font-size: 0.8rem;">—</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="emp-info">
+                                <div class="emp-avatar" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">P</div>
+                                <div>
+                                    <div class="emp-name">Priya Patel</div>
+                                    <div class="emp-email">priya@company.com</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge rounded-pill px-3 py-1.5" style="background: rgba(0, 206, 201, 0.12); color: var(--accent-success); font-weight: 600; font-size: 0.75rem;">
+                                Present
+                            </span>
+                        </td>
+                        <td style="font-family: monospace; font-size: 0.8rem; color: var(--text-secondary);">09:15 AM</td>
+                        <td style="color: var(--text-secondary); font-size: 0.8rem;">Active</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="emp-info">
+                                <div class="emp-avatar" style="background: linear-gradient(135deg, #74b9ff, #0984e3);">V</div>
+                                <div>
+                                    <div class="emp-name">Vikram Sen</div>
+                                    <div class="emp-email">vikram@company.com</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge rounded-pill px-3 py-1.5" style="background: rgba(255, 107, 107, 0.12); color: var(--accent-danger); font-weight: 600; font-size: 0.75rem;">
+                                Absent
+                            </span>
+                        </td>
+                        <td style="color: var(--text-secondary); font-size: 0.8rem;">—</td>
+                        <td style="color: var(--text-secondary); font-size: 0.8rem;">—</td>
+                        <td>—</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const totalEmp = parseInt('{{ total_employees|default:5 }}') || 5;
+        
+        // Calculate realistic counts based on total database size
+        let present = Math.max(1, Math.round(totalEmp * 0.8));
+        let leave = Math.max(0, Math.round(totalEmp * 0.1));
+        let absent = Math.max(0, totalEmp - present - leave);
+        
+        // Update dashboard figures
+        document.getElementById('statPresent').textContent = present;
+        document.getElementById('statLeave').textContent = leave;
+        document.getElementById('statAbsent').textContent = absent;
+        
+        // Today's Status Split Doughnut Chart
+        const ctxToday = document.getElementById('todayAttendanceChart').getContext('2d');
+        new Chart(ctxToday, {
+            type: 'doughnut',
+            data: {
+                labels: ['Present', 'On Leave', 'Absent'],
+                datasets: [{
+                    data: [present, leave, absent],
+                    backgroundColor: ['#00cec9', '#fdcb6e', '#ff6b6b'],
+                    borderWidth: 2,
+                    borderColor: '#1e2235'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#e8e8ed',
+                            font: { family: 'Inter', size: 10 }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Weekly Trend Line Chart
+        const ctxWeekly = document.getElementById('weeklyAttendanceChart').getContext('2d');
+        new Chart(ctxWeekly, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                datasets: [
+                    {
+                        label: 'Present %',
+                        data: [88, 92, 85, 90, 80],
+                        borderColor: '#00cec9',
+                        backgroundColor: 'rgba(0, 206, 201, 0.08)',
+                        fill: true,
+                        tension: 0.35,
+                        borderWidth: 2.5
+                    },
+                    {
+                        label: 'Absent/Leave %',
+                        data: [12, 8, 15, 10, 20],
+                        borderColor: '#ff6b6b',
+                        backgroundColor: 'rgba(255, 107, 107, 0.05)',
+                        fill: true,
+                        tension: 0.35,
+                        borderWidth: 1.5,
+                        borderDash: [5, 5]
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#e8e8ed',
+                            font: { family: 'Inter', size: 10 }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#8b8fa3', font: { family: 'Inter', size: 10 } }
+                    },
+                    y: {
+                        grid: { color: '#2d3250' },
+                        min: 0,
+                        max: 100,
+                        ticks: { color: '#8b8fa3', font: { family: 'Inter', size: 10 } }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

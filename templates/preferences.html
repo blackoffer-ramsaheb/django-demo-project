@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %}Preferences — HR Nexus{% endblock %}
+
+{% block nav_preferences %}active{% endblock %}
+
+{% block page_title %}Preferences{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'employee_list' %}" class="btn btn-ghost d-inline-flex align-items-center gap-1">
+    <i class="bi bi-arrow-left"></i> Back to List
+</a>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Styling settings form switches to fit our color scheme */
+    .form-check-input:checked {
+        background-color: var(--accent-primary) !important;
+        border-color: var(--accent-primary) !important;
+    }
+    .form-check-input {
+        background-color: var(--bg-primary);
+        border-color: var(--border-color);
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7 col-xl-6">
+
+        <div class="card-custom animate-in animate-delay-1 mb-4">
+            <div class="card-header">
+                <h5 class="mb-0 fw-bold" style="font-size: 1.05rem;">Appearance</h5>
+                <small style="color: var(--text-secondary); font-size: 0.78rem;">Configure application style and presentation</small>
+            </div>
+            <div class="card-body">
+                <!-- Theme Toggle -->
+                <div class="form-check form-switch d-flex justify-content-between align-items-center p-0 mb-3">
+                    <label class="form-check-label d-flex flex-column" for="darkModeSwitch">
+                        <span class="fw-semibold text-white" style="font-size: 0.85rem;">Dark Mode</span>
+                        <span class="text-secondary" style="font-size: 0.78rem;">Use sleek dark theme colors (recommended)</span>
+                    </label>
+                    <input class="form-check-input" type="checkbox" role="switch" id="darkModeSwitch" checked>
+                </div>
+                
+                <hr style="border-top: 1px solid var(--border-color); margin: 1rem 0;">
+
+                <!-- Compact Mode -->
+                <div class="form-check form-switch d-flex justify-content-between align-items-center p-0 mb-1">
+                    <label class="form-check-label d-flex flex-column" for="compactModeSwitch">
+                        <span class="fw-semibold text-white" style="font-size: 0.85rem;">Compact Mode</span>
+                        <span class="text-secondary" style="font-size: 0.78rem;">Reduce layout padding to show more information</span>
+                    </label>
+                    <input class="form-check-input" type="checkbox" role="switch" id="compactModeSwitch">
+                </div>
+            </div>
+        </div>
+
+        <div class="card-custom animate-in animate-delay-2 mb-4">
+            <div class="card-header">
+                <h5 class="mb-0 fw-bold" style="font-size: 1.05rem;">Notifications</h5>
+                <small style="color: var(--text-secondary); font-size: 0.78rem;">Select when and how you receive alerts</small>
+            </div>
+            <div class="card-body">
+                <!-- Email Alerts -->
+                <div class="form-check form-switch d-flex justify-content-between align-items-center p-0 mb-3">
+                    <label class="form-check-label d-flex flex-column" for="emailAlertsSwitch">
+                        <span class="fw-semibold text-white" style="font-size: 0.85rem;">Email Notifications</span>
+                        <span class="text-secondary" style="font-size: 0.78rem;">Receive daily digests of HR activity logs</span>
+                    </label>
+                    <input class="form-check-input" type="checkbox" role="switch" id="emailAlertsSwitch" checked>
+                </div>
+                
+                <hr style="border-top: 1px solid var(--border-color); margin: 1rem 0;">
+
+                <!-- Payroll Updates -->
+                <div class="form-check form-switch d-flex justify-content-between align-items-center p-0 mb-1">
+                    <label class="form-check-label d-flex flex-column" for="payrollAlertsSwitch">
+                        <span class="fw-semibold text-white" style="font-size: 0.85rem;">Payroll Alerts</span>
+                        <span class="text-secondary" style="font-size: 0.78rem;">Get notified when monthly payroll budgets are released</span>
+                    </label>
+                    <input class="form-check-input" type="checkbox" role="switch" id="payrollAlertsSwitch" checked>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-custom animate-in animate-delay-3 mb-4">
+            <div class="card-header">
+                <h5 class="mb-0 fw-bold" style="font-size: 1.05rem;">General Settings</h5>
+                <small style="color: var(--text-secondary); font-size: 0.78rem;">Manage local preferences and formats</small>
+            </div>
+            <div class="card-body">
+                <!-- Language selection -->
+                <div class="mb-3">
+                    <label for="languageSelect" class="form-label-custom">Language</label>
+                    <select id="languageSelect" class="form-select form-control-custom">
+                        <option value="en" selected>English (United States)</option>
+                        <option value="hi">Hindi (हिन्दी)</option>
+                        <option value="mr">Marathi (मराठी)</option>
+                    </select>
+                </div>
+
+                <!-- Date Format -->
+                <div class="mb-3">
+                    <label for="dateFormatSelect" class="form-label-custom">Date Format</label>
+                    <select id="dateFormatSelect" class="form-select form-control-custom">
+                        <option value="dmy" selected>DD/MM/YYYY</option>
+                        <option value="mdy">MM/DD/YYYY</option>
+                        <option value="ymd">YYYY-MM-DD</option>
+                    </select>
+                </div>
+
+                <!-- Currency -->
+                <div class="mb-1">
+                    <label for="currencySelect" class="form-label-custom">Default Currency</label>
+                    <select id="currencySelect" class="form-select form-control-custom">
+                        <option value="inr" selected>INR (₹) - Indian Rupee</option>
+                        <option value="usd">USD ($) - US Dollar</option>
+                        <option value="eur">EUR (€) - Euro</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demonstration Notice Banner -->
+        <div class="card-custom mb-4 animate-in animate-delay-4" style="border-left: 4px solid var(--accent-success);">
+            <div class="card-body py-3 px-4">
+                <div class="d-flex align-items-start gap-3">
+                    <div style="color: var(--accent-success); font-size: 1.3rem; margin-top: 2px;">
+                        <i class="bi bi-patch-check-fill"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold" style="font-size: 0.85rem; margin-bottom: 0.25rem;">Preferences Mockup</div>
+                        <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 0; line-height: 1.5;">
+                            These configurations are for UI/UX demonstration. In a production environment, values are saved in user session storage or a backend database user profile table.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Button -->
+        <div class="animate-in animate-delay-4 d-flex justify-content-end mb-5">
+            <button type="button" class="btn btn-accent px-4 py-2" onclick="alert('Demo Settings saved successfully (visual only).')">
+                Save Preferences
+            </button>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

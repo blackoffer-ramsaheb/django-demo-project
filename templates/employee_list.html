@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+{% block title %}Employees — HR Nexus{% endblock %}
+
+{% block nav_employees %}active{% endblock %}
+
+{% block page_title %}Employees{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'employee_create' %}" class="btn btn-accent d-none d-sm-inline-flex align-items-center gap-2">
+    <i class="bi bi-plus-lg"></i> Add Employee
+</a>
+{% endblock %}
+
+{% block content %}
+<!-- Stat Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3 animate-in animate-delay-1">
+        <div class="stat-card">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="stat-icon" style="background: rgba(108, 92, 231, 0.12); color: var(--accent-primary);">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <span class="badge rounded-pill" style="background: rgba(0, 206, 201, 0.12); color: var(--accent-success); font-size: 0.7rem;">
+                    <i class="bi bi-arrow-up"></i> Active
+                </span>
+            </div>
+            <div class="stat-value">{{ employees|length }}</div>
+            <div class="stat-label">Total Employees</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3 animate-in animate-delay-2">
+        <div class="stat-card">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="stat-icon" style="background: rgba(0, 206, 201, 0.12); color: var(--accent-success);">
+                    <i class="bi bi-building"></i>
+                </div>
+            </div>
+            <div class="stat-value" id="deptCount">—</div>
+            <div class="stat-label">Departments</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3 animate-in animate-delay-3">
+        <div class="stat-card">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="stat-icon" style="background: rgba(253, 203, 110, 0.12); color: var(--accent-warning);">
+                    <i class="bi bi-cash-stack"></i>
+                </div>
+            </div>
+            <div class="stat-value" id="avgSalary">—</div>
+            <div class="stat-label">Avg. Salary</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3 animate-in animate-delay-4">
+        <div class="stat-card">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="stat-icon" style="background: rgba(255, 107, 107, 0.12); color: var(--accent-danger);">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
+            </div>
+            <div class="stat-value" id="totalPayroll">—</div>
+            <div class="stat-label">Total Payroll</div>
+        </div>
+    </div>
+</div>
+
+<!-- Employee Table Card -->
+<div class="card-custom animate-in" style="animation-delay: 0.35s; opacity: 0;">
+    <div class="card-header">
+        <div class="row align-items-center g-3">
+            <div class="col-md-5 col-lg-4">
+                <form method="GET" action="{% url 'employee_list' %}">
+                    <div class="search-wrapper">
+                        <i class="bi bi-search"></i>
+                        <input type="text" name="search" placeholder="Search employees..." value="{{ request.GET.search }}" class="form-control-custom">
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-7 col-lg-8 d-flex justify-content-md-end gap-2 flex-wrap">
+                <a href="{% url 'employee_list' %}" class="btn btn-ghost">
+                    <i class="bi bi-arrow-clockwise"></i> Refresh
+                </a>
+                <a href="{% url 'employee_create' %}" class="btn btn-accent d-sm-none d-inline-flex align-items-center gap-1">
+                    <i class="bi bi-plus-lg"></i> Add
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        {% if employees %}
+        <div class="table-responsive">
+            <table class="table table-custom" id="employeeTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Employee</th>
+                        <th>Department</th>
+                        <th>Salary</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for emp in employees %}
+                    <tr>
+                        <td>
+                            <span style="color: var(--text-secondary); font-size: 0.8rem; font-weight: 500;">{{ forloop.counter }}</span>
+                        </td>
+                        <td>
+                            <div class="emp-info">
+                                <div class="emp-avatar" style="background: linear-gradient(135deg, hsl({{ forloop.counter0|add:'180' }}, 65%, 55%), hsl({{ forloop.counter0|add:'220' }}, 65%, 45%));">
+                                    {{ emp.name|make_list|first }}
+                                </div>
+                                <div>
+                                    <div class="emp-name">{{ emp.name }}</div>
+                                    <div class="emp-email">{{ emp.email }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="dept-badge">
+                                <i class="bi bi-circle-fill" style="font-size: 0.4rem;"></i>
+                                {{ emp.department }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="salary-text">₹{{ emp.salary|floatformat:0 }}</span>
+                        </td>
+                        <td class="text-end">
+                            <div class="d-flex gap-2 justify-content-end">
+                                <a href="{% url 'employee_update' emp.pk %}" class="btn btn-ghost" title="Edit">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </a>
+                                <a href="{% url 'employee_delete' emp.pk %}" class="btn btn-danger-ghost" title="Delete">
+                                    <i class="bi bi-trash3"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-person-badge d-block"></i>
+            <h5>No employees found</h5>
+            <p class="mb-3">Get started by adding your first team member.</p>
+            <a href="{% url 'employee_create' %}" class="btn btn-accent">
+                <i class="bi bi-plus-lg me-1"></i> Add Employee
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Compute live stats from table data
+    document.addEventListener('DOMContentLoaded', function () {
+        const rows = document.querySelectorAll('#employeeTable tbody tr');
+        const depts = new Set();
+        let totalSalary = 0;
+
+        rows.forEach(row => {
+            const dept = row.querySelector('.dept-badge');
+            const salary = row.querySelector('.salary-text');
+            if (dept) depts.add(dept.textContent.trim());
+            if (salary) {
+                const val = parseFloat(salary.textContent.replace(/[^\d.]/g, ''));
+                if (!isNaN(val)) totalSalary += val;
+            }
+        });
+
+        const count = rows.length;
+        document.getElementById('deptCount').textContent = depts.size || '0';
+        document.getElementById('avgSalary').textContent = count
+            ? '₹' + Math.round(totalSalary / count).toLocaleString('en-IN')
+            : '₹0';
+        document.getElementById('totalPayroll').textContent = '₹' + Math.round(totalSalary).toLocaleString('en-IN');
+    });
+</script>
+{% endblock %}
