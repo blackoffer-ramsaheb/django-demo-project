@@ -639,7 +639,7 @@
             <a href="{% url 'employee_list' %}" class="nav-link {% block nav_dashboard %}{% endblock %}">
                 <i class="bi bi-speedometer2"></i> Dashboard
             </a>
-            <a href="{% url 'employee_list' %}" class="nav-link {% block nav_employees %}{% endblock %}">
+            <a href="{% url 'employee_list' %}?tab=employees" class="nav-link {% block nav_employees %}{% endblock %}">
                 <i class="bi bi-people-fill"></i> Employees
             </a>
             <a href="{% url 'employee_create' %}" class="nav-link {% block nav_add %}{% endblock %}">

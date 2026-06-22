@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}Employees — HR Nexus{% endblock %}
+{% block title %}{% if request.GET.tab == 'employees' %}Employees — HR Nexus{% else %}Dashboard — HR Nexus{% endif %}{% endblock %}
 
-{% block nav_employees %}active{% endblock %}
+{% block nav_dashboard %}{% if not request.GET.tab %}active{% endif %}{% endblock %}
+{% block nav_employees %}{% if request.GET.tab == 'employees' %}active{% endif %}{% endblock %}
 
-{% block page_title %}Employees{% endblock %}
+{% block page_title %}{% if request.GET.tab == 'employees' %}Employees Directory{% else %}Dashboard{% endif %}{% endblock %}
 
 {% block topbar_actions %}
 <a href="{% url 'employee_create' %}" class="btn btn-accent d-none d-sm-inline-flex align-items-center gap-2">

@@ -123,16 +123,16 @@ def analytics(request):
 def payroll(request):
     employees = Employee.objects.all()
     headcount = employees.count()
-    total_annual_payroll = Employee.objects.aggregate(Sum('salary'))['salary__sum'] or 0
+    total_monthly_payroll = Employee.objects.aggregate(Sum('salary'))['salary__sum'] or 0
+    total_annual_payroll = float(total_monthly_payroll) * 12
     
-    avg_salary = Employee.objects.aggregate(Avg('salary'))['salary__avg'] or 0
-    avg_monthly_salary = float(avg_salary or 0) / 12
+    avg_monthly_salary = Employee.objects.aggregate(Avg('salary'))['salary__avg'] or 0
     
     dept_payroll = Employee.objects.values('department').annotate(
         total=Sum('salary')
     )
     dept_payroll_labels = [d['department'] for d in dept_payroll]
-    dept_payroll_values = [float(d['total'] or 0) for d in dept_payroll]
+    dept_payroll_values = [float(d['total'] or 0) * 12 for d in dept_payroll]
     
     context = {
         'employees': employees,

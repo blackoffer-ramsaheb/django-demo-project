@@ -189,12 +189,12 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const totalEmp = parseInt('{{ total_employees|default:5 }}') || 5;
+        const totalEmp = parseInt('{{ total_employees|default:0 }}') || 0;
         
         // Calculate realistic counts based on total database size
-        let present = Math.max(1, Math.round(totalEmp * 0.8));
-        let leave = Math.max(0, Math.round(totalEmp * 0.1));
-        let absent = Math.max(0, totalEmp - present - leave);
+        let present = totalEmp > 0 ? Math.max(1, Math.round(totalEmp * 0.8)) : 0;
+        let leave = totalEmp > 0 ? Math.max(0, Math.round(totalEmp * 0.1)) : 0;
+        let absent = totalEmp > 0 ? Math.max(0, totalEmp - present - leave) : 0;
         
         // Update dashboard figures
         document.getElementById('statPresent').textContent = present;
